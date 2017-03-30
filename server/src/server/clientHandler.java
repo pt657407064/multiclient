@@ -17,7 +17,7 @@ import static server.ServerThread.dos;
 
 /**
  *
- * @author root
+ * @author Tao
  */
 public class clientHandler implements Runnable{
 
@@ -73,7 +73,7 @@ public class clientHandler implements Runnable{
                     while(!client.isClosed())
                     {
                         incoming = dis.readUTF();
-                        System.out.println(incoming);
+                        ServerUI.appendText(incoming);
                         for(int i = 0; i < ServerThread.clients.size();i++)
                         {
                             if(ServerThread.clients.get(i).client!=client)
@@ -86,12 +86,13 @@ public class clientHandler implements Runnable{
                 } catch (Exception ex) {
                       
                     try {
-                        System.out.println("Client disconnected1");
+                        ServerUI.appendText("Client disconnected");
                         dis.close();
                         dos.close();
                         client.close();
+                        if(ServerThread.clients.isEmpty()){ServerUI.appendText("No one is connected");}
                     } catch (IOException ex1) {
-                        System.out.println("Client disconnected2");
+                        ServerUI.appendText("Client disconnected");
                     }
              
                 } 

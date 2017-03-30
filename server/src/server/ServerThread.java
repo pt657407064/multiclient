@@ -28,13 +28,15 @@ public class ServerThread implements Runnable {
     public static DataOutputStream dos;
     Socket client;
     String incoming;
-    Scanner sc = new Scanner(System.in);
+    
     public static ArrayList<clientHandler> clients = new ArrayList<>();
     String text;
+    
     public ServerThread(ServerSocket server)
     {
         this.server = server;
     }
+    
     @Override
     public void run() {
         try {
@@ -56,48 +58,16 @@ public class ServerThread implements Runnable {
    
 
     private void waiting() throws IOException {
-       // System.out.println("Waiting for client to connect....");
+        if(clients.isEmpty()){
+        ServerUI.appendText("There is no one connected!");}
+        
         client = server.accept();  
         clientHandler clientThreadObj = new clientHandler(client);
         Thread thread = new Thread(clientThreadObj);
         thread.start();
         clients.add(clientThreadObj);
-        System.out.println("Someone is connected");
+        ServerUI.appendText(client.getInetAddress().toString().replaceAll("/", "")+" is connected");
         
-        if(clients.size() == 1)
-        {
-        Thread outgoingThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                while(!server.isClosed())
-                {
-                    
-                        text = sc.nextLine();
-                        for(int i = 0;i<clients.size();i++)
-                        {
-                            if(clients.get(i).client.isClosed())
-                            {   clients.remove(i);}
-                        }
-                        for(int i = 0;i<clients.size();i++)
-                        {
-                            if(!clients.get(i).client.isClosed())
-                            {clients.get(i).getDos().writeUTF(text);}
-                            
-                        }
-                   
-                 }
-                } catch (Exception ex) {
-                    System.out.println("crashed 2");
-                  }
-                
-                
-            }
-
-      
-           });
-                outgoingThread.start();
-         }
     
     }
 }

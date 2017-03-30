@@ -21,10 +21,14 @@ public class Server {
     
     public static void main(String[] args) throws IOException {
        
-        server = new ServerSocket(1000);
-        Thread th = new Thread(new ServerThread(server));
-        th.start();
-               
+        new ServerUI();  
+        
+           
+      
+    }
+    public static void setServer(ServerSocket server)
+    {
+        Server.server = server;
     }
 
     
